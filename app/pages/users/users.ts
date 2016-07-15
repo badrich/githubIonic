@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
+import { GithubUsers } from '../../providers/github-users/github-users'
 /*
   Generated class for the UsersPage page.
 
@@ -9,11 +10,15 @@ import { NavController } from 'ionic-angular';
 */
 @Component({
   templateUrl: 'build/pages/users/users.html',
+  providers: [GithubUsers]
 })
 export class UsersPage {
 
-  constructor(private nav: NavController) {
-
+  constructor(public nav: NavController, githubUsers: GithubUsers) {
+    githubUsers.load()
+    .then( function (users) {
+      console.log(users);
+    });
   }
 
 }

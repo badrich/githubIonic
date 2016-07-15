@@ -10,16 +10,14 @@ import 'rxjs/add/operator/map';
 */
 @Injectable()
 export class GithubUsers {
-  data: any;
+  githubUsers: any = null;
 
-  constructor(private http: Http) {
-    this.data = null;
-  }
+  constructor(public http: Http) {}
 
   load() {
-    if (this.data) {
+    if (this.githubUsers) {
       // already loaded data
-      return Promise.resolve(this.data);
+      return Promise.resolve(this.githubUsers);
     }
 
     // don't have the data yet
@@ -27,15 +25,14 @@ export class GithubUsers {
       // We're using Angular Http provider to request the data,
       // then on the response it'll map the JSON data to a parsed JS object.
       // Next we process the data and resolve the promise with the new data.
-      this.http.get('path/to/data.json')
-        .map(res => res.json())
-        .subscribe(data => {
+      this.http.get('https://api.github.com/users')
+        .map(res => <Array<User>>(res.json()))
+        .subscribe(users => {
           // we've got back the raw data, now generate the core schedule data
           // and save the data for later reference
-          this.data = data;
-          resolve(this.data);
+          this.githubUsers = users;
+          resolve(this.githubUsers);
         });
     });
   }
 }
-
